@@ -30,6 +30,7 @@ public class ItemControllerTest {
     ));
     // declare the mocks
     private final ItemRepository itemRepository = mock(ItemRepository.class);
+    // object under test
     private ItemController itemController;
 
     @BeforeClass

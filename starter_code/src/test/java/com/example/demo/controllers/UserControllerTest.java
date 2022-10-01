@@ -20,18 +20,16 @@ import static org.mockito.Mockito.when;
 
 public class UserControllerTest {
 
-    private UserController userController;
-    // declare the mocks
-    private final UserRepository userRepo = mock(UserRepository.class);
-    private final CartRepository cartRepository = mock(CartRepository.class);
-    private final BCryptPasswordEncoder encoder = mock(BCryptPasswordEncoder.class);
-
     // Constant strings
     private static final String DEFAULT_USER_NAME = "testUser";
     private static final String DEFAULT_PLAIN_PASSWORD = "testPassword";
     private static final String DEFAULT_HASHED_PASSWORD = "hashedPassword";
-
     private static User testUser;
+    // declare the mocks
+    private final UserRepository userRepo = mock(UserRepository.class);
+    private final CartRepository cartRepository = mock(CartRepository.class);
+    private final BCryptPasswordEncoder encoder = mock(BCryptPasswordEncoder.class);
+    private UserController userController;
 
     @BeforeClass
     public static void initialize() {
@@ -41,6 +39,15 @@ public class UserControllerTest {
         testUser.setId(0);
     }
 
+    private static CreateUserRequest createDefaultTestUserRequest() {
+        // Create the user request
+        CreateUserRequest userReq = new CreateUserRequest();
+        userReq.setUsername(DEFAULT_USER_NAME);
+        userReq.setPassword(DEFAULT_PLAIN_PASSWORD);
+        userReq.setConfirmPassword(DEFAULT_PLAIN_PASSWORD);
+
+        return userReq;
+    }
 
     @Before
     public void setUp() {
@@ -196,15 +203,5 @@ public class UserControllerTest {
         assertEquals(0, user.getId());
         assertEquals(DEFAULT_USER_NAME, user.getUsername());
         assertEquals(DEFAULT_HASHED_PASSWORD, user.getPassword());
-    }
-
-    private static CreateUserRequest createDefaultTestUserRequest() {
-        // Create the user request
-        CreateUserRequest userReq = new CreateUserRequest();
-        userReq.setUsername(DEFAULT_USER_NAME);
-        userReq.setPassword(DEFAULT_PLAIN_PASSWORD);
-        userReq.setConfirmPassword(DEFAULT_PLAIN_PASSWORD);
-
-        return userReq;
     }
 }
