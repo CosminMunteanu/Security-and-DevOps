@@ -16,16 +16,14 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/user")
 public class UserController {
 
+    private static final Logger log = LoggerFactory.getLogger(UserController.class);
+
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private CartRepository cartRepository;
-
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
-
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
     @GetMapping("/id/{id}")
     public ResponseEntity<User> findById(@PathVariable Long id) {
@@ -42,14 +40,13 @@ public class UserController {
     public ResponseEntity<User> createUser(@RequestBody CreateUserRequest createUserRequest) {
         User user = new User();
         user.setUsername(createUserRequest.getUsername());
-        log.info("User with user name " + createUserRequest.getUsername() + " created!");
 
         // Validate the password input
         if ((createUserRequest.getPassword() == null) ||
                 (createUserRequest.getPassword().length() < 7) ||
                 (!createUserRequest.getPassword().equals(createUserRequest.getConfirmPassword()))) {
-            
-            log.debug("Invalid password request. Password = " + createUserRequest.getPassword() + ". Confirm password = " + createUserRequest.getConfirmPassword());
+
+            log.error("Create user operation failed. Invalid password. Password = " + createUserRequest.getPassword() + ". Confirm password = " + createUserRequest.getConfirmPassword());
             return ResponseEntity.badRequest().build();
         }
         // Store the encoded password
@@ -60,6 +57,8 @@ public class UserController {
         cartRepository.save(cart);
         user.setCart(cart);
         userRepository.save(user);
+        log.info("Create user operation success. User: " + createUserRequest.getUsername() + " created!");
+
         return ResponseEntity.ok(user);
     }
 
