@@ -4,7 +4,6 @@ import com.example.demo.TestUtils;
 import com.example.demo.model.persistence.Item;
 import com.example.demo.model.persistence.repositories.ItemRepository;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.http.ResponseEntity;
 
@@ -20,22 +19,18 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class ItemControllerTest {
-
     // private static members
-    private final static Long firstItemId = 1L;
     private final static List<Item> testItems = new ArrayList<>(Arrays.asList(
-            new Item(firstItemId, "Item1", new BigDecimal("12.7"), "Item bun"),
-            new Item(firstItemId + 1, "Item2", new BigDecimal(0), "Item gratis"),
-            new Item(firstItemId + 2, "Item3", new BigDecimal(-1), "Item bad price")
+            new Item(TestUtils.DEFAULT_ITEM_ID, "Item1", new BigDecimal("12.7"), "Item bun"),
+            new Item(TestUtils.DEFAULT_ITEM_ID + 1, "Item2", new BigDecimal(0), "Item gratis"),
+            new Item(TestUtils.DEFAULT_ITEM_ID + 2, "Item3", new BigDecimal(-1), "Item bad price")
     ));
+
     // declare the mocks
     private final ItemRepository itemRepository = mock(ItemRepository.class);
+
     // object under test
     private ItemController itemController;
-
-    @BeforeClass
-    public static void initialize() {
-    }
 
     @Before
     public void setUp() {
@@ -85,10 +80,10 @@ public class ItemControllerTest {
         assert testItem != null;
 
         // Stub
-        when(itemRepository.findById(firstItemId)).thenReturn(Optional.of(testItem));
+        when(itemRepository.findById(TestUtils.DEFAULT_ITEM_ID)).thenReturn(Optional.of(testItem));
 
         // Call the method under test
-        final ResponseEntity<Item> response = itemController.getItemById(firstItemId);
+        final ResponseEntity<Item> response = itemController.getItemById(TestUtils.DEFAULT_ITEM_ID);
 
         // Assertions
         assertNotNull(response);
@@ -104,10 +99,10 @@ public class ItemControllerTest {
     @Test
     public void getItemByIdItemNotFound() {
         // Stub
-        when(itemRepository.findById(firstItemId)).thenReturn(Optional.empty());
+        when(itemRepository.findById(TestUtils.DEFAULT_ITEM_ID)).thenReturn(Optional.empty());
 
         // Call the method under test
-        final ResponseEntity<Item> response = itemController.getItemById(firstItemId);
+        final ResponseEntity<Item> response = itemController.getItemById(TestUtils.DEFAULT_ITEM_ID);
 
         // Assertions
         assertNotNull(response);

@@ -24,9 +24,10 @@ public class OrderController {
     @PostMapping("/submit/{username}")
     public ResponseEntity<UserOrder> submit(@PathVariable String username) {
         User user = userRepository.findByUsername(username);
-        if (user == null) {
+        if ((user == null) || (user.getCart() == null) || (user.getCart().getItems() == null) || (user.getCart().getItems().isEmpty())) {
             return ResponseEntity.notFound().build();
         }
+
         UserOrder order = UserOrder.createFromCart(user.getCart());
         orderRepository.save(order);
         return ResponseEntity.ok(order);

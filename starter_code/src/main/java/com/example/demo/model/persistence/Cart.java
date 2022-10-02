@@ -29,7 +29,7 @@ public class Cart {
     @Column
     @JsonProperty
     private BigDecimal total;
-	
+
     public BigDecimal getTotal() {
         return total;
     }
@@ -77,10 +77,12 @@ public class Cart {
         if (items == null) {
             items = new ArrayList<>();
         }
-        items.remove(item);
-        if (total == null) {
-            total = new BigDecimal(0);
+        if (items.remove(item)) {
+            if (total != null) {
+                total = total.subtract(item.getPrice());
+            } else {
+                total = new BigDecimal(0);
+            }
         }
-        total = total.subtract(item.getPrice());
     }
 }
